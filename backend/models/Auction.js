@@ -7,7 +7,7 @@ const auctionSchema = new mongoose.Schema(
     endTime: Date,
     bids: [{ type: mongoose.Schema.Types.ObjectId, ref: "Bid" }],
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = mongoose.model("Auction", auctionSchema);

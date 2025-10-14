@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
-
+const brandRoutes = require("./routes/brands");
 const app = express();
 
 app.use(express.json());
@@ -22,6 +22,7 @@ const connectDB = async () => {
 app.get("/", (req, res) => {
   res.json({ success: true, message: "Server is running" });
 });
+app.use("/api/brands", brandRoutes);
 
 const startServer = async () => {
   await connectDB();

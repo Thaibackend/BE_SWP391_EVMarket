@@ -12,7 +12,7 @@ const orderSchema = new mongoose.Schema(
     },
     contractUrl: String,
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = mongoose.model("Order", orderSchema);

@@ -16,7 +16,7 @@ const pinSchema = new mongoose.Schema(
     aiSuggestedPrice: Number,
     images: [String],
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = mongoose.model("Pin", pinSchema);
