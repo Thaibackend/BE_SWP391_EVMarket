@@ -176,10 +176,23 @@ const startServer = async () => {
         
         // Start listening
         app.listen(PORT, () => {
-            console.log(`🚀 Server is running on port ${PORT}`);
+            console.log('\n╔════════════════════════════════════════════════════════════╗');
+            console.log('║           🚀 SERVER STARTED SUCCESSFULLY! 🚀              ║');
+            console.log('╚════════════════════════════════════════════════════════════╝\n');
+            
             console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-            console.log(`🔗 API Base URL: http://localhost:${PORT}/api`);
-            console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
+            console.log(`🔌 Port: ${PORT}\n`);
+            
+            console.log('📍 AVAILABLE ENDPOINTS:');
+            console.log('─────────────────────────────────────────────────────────────');
+            console.log(`   🏠 Home:            http://localhost:${PORT}/`);
+            console.log(`   🏥 Health Check:    http://localhost:${PORT}/health`);
+            console.log(`   🔗 API Base:        http://localhost:${PORT}/api`);
+            console.log(`   📚 Swagger UI:      http://localhost:${PORT}/api-docs`);
+            console.log(`   📄 Swagger JSON:    http://localhost:${PORT}/api-docs.json`);
+            console.log('─────────────────────────────────────────────────────────────\n');
+            
+            console.log('💡 TIP: Click on the Swagger UI link to test all API endpoints!\n');
         });
     } catch (error) {
         console.error('Failed to start server:', error);

@@ -15,6 +15,9 @@ const storage = new CloudinaryStorage({
     }
 });
 
+// Check if Cloudinary is in demo mode
+const isDemoMode = process.env.CLOUDINARY_API_KEY === 'demo';
+
 // Configure multer
 const upload = multer({
     storage: storage,
@@ -54,15 +57,34 @@ const uploadSingle = (fieldName = 'image') => {
 // Middleware for multiple images upload
 const uploadMultiple = (fieldName = 'images', maxCount = 10) => {
     return (req, res, next) => {
-        upload.array(fieldName, maxCount)(req, res, (err) => {
-            if (err) {
-                return res.status(400).json({
-                    success: false,
-                    message: err.message
-                });
-            }
-            next();
-        });
+        // In demo mode, still parse form data but skip file upload
+        if (isDemoMode) {
+            // Use multer memory storage for demo mode to parse form data
+            const multer = require('multer');
+            const memoryStorage = multer.memoryStorage();
+            const memoryUpload = multer({ storage: memoryStorage });
+            
+            memoryUpload.array(fieldName, maxCount)(req, res, (err) => {
+                if (err) {
+                    return res.status(400).json({
+                        success: false,
+                        message: err.message
+                    });
+                }
+                req.files = []; // Empty files array for demo
+                next();
+            });
+        } else {
+            upload.array(fieldName, maxCount)(req, res, (err) => {
+                if (err) {
+                    return res.status(400).json({
+                        success: false,
+                        message: err.message
+                    });
+                }
+                next();
+            });
+        }
     };
 };
 

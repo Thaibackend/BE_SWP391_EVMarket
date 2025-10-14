@@ -149,23 +149,39 @@ const options = {
             { name: 'AI', description: 'AI-powered features' }
         ]
     },
-    apis: ['./routes/*.js', './controllers/*.js']
+    apis: [
+        './routes/*.js', 
+        './controllers/*.js', 
+        './server.js',
+        './config/swagger-routes.js'
+    ]
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
 const setupSwagger = (app) => {
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-        explorer: true,
-        customCss: '.swagger-ui .topbar { display: none }',
-        customSiteTitle: 'EV Marketplace API Documentation'
-    }));
+    // Swagger UI setup with better error handling
+    try {
+        app.use('/api-docs', swaggerUi.serve);
+        app.get('/api-docs', swaggerUi.setup(swaggerSpec, {
+            explorer: true,
+            customCss: '.swagger-ui .topbar { display: none }',
+            customSiteTitle: 'EV Marketplace API Documentation',
+            swaggerOptions: {
+                persistAuthorization: true,
+            }
+        }));
 
-    // Serve swagger spec as JSON
-    app.get('/api-docs.json', (req, res) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.send(swaggerSpec);
-    });
+        // Serve swagger spec as JSON
+        app.get('/api-docs.json', (req, res) => {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(swaggerSpec);
+        });
+
+        console.log('✅ Swagger documentation available at /api-docs');
+    } catch (error) {
+        console.error('❌ Failed to setup Swagger:', error.message);
+    }
 };
 
 module.exports = setupSwagger;

@@ -43,6 +43,18 @@ class Brand {
         return result.recordset.length > 0 ? new Brand(result.recordset[0]) : null;
     }
 
+    static async findByName(brandName) {
+        const pool = require('../config/database').getPool();
+        const request = pool.request();
+        request.input('brandName', sql.NVarChar(100), brandName);
+
+        const result = await request.query(`
+            SELECT BrandId, BrandName FROM Brand WHERE BrandName = @brandName
+        `);
+
+        return result.recordset.length > 0 ? new Brand(result.recordset[0]) : null;
+    }
+
     static async update(brandId, brandName) {
         const pool = require('../config/database').getPool();
         const request = pool.request();
