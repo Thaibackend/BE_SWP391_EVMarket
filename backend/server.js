@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const brandRoutes = require("./routes/brands");
 const carRoutes = require("./routes/cars");
+const pinRoutes = require("./routes/pins");
 const app = express();
 
 app.use(express.json());
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/brands", brandRoutes);
 app.use("/api/cars", carRoutes);
+app.use("/api/pins", pinRoutes);
 
 const startServer = async () => {
   await connectDB();

@@ -3,7 +3,11 @@ const pinSchema = new mongoose.Schema(
   {
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     capacity: Number, // Dung lượng pin (kWh)
-    brand: String, // Hãng pin (LG, CATL, VinFast...)
+    brand: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+      required: true,
+    },
     health: Number, // % tình trạng còn lại
     year: Number, // Năm sản xuất
     cycles: Number, // Số lần sạc
