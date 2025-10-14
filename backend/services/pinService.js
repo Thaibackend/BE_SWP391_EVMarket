@@ -11,6 +11,14 @@ class PinService {
   async getById(id) {
     return await Pin.findById(id).populate("brand owner");
   }
+
+  async update(id, data) {
+    return await Pin.findByIdAndUpdate(id, data, { new: true });
+  }
+
+  async delete(id) {
+    return await Pin.findByIdAndDelete(id);
+  }
 }
 
 module.exports = new PinService();

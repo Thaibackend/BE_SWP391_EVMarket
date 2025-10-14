@@ -27,6 +27,26 @@ class PinController {
       res.status(500).json({ message: err.message });
     }
   }
+
+  async update(req, res) {
+    try {
+      const pin = await pinService.update(req.params.id, req.body);
+      if (!pin) return res.status(404).json({ message: "Pin not found" });
+      res.json(pin);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  }
+
+  async delete(req, res) {
+    try {
+      const pin = await pinService.delete(req.params.id);
+      if (!pin) return res.status(404).json({ message: "Pin not found" });
+      res.json({ message: "Deleted successfully" });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  }
 }
 
 module.exports = new PinController();
