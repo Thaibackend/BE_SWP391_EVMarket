@@ -8,4 +8,5 @@ router.get("/:id", listingController.getListingById);
 router.get("/seller/:sellerId", listingController.getListingsBySeller);
 router.patch("/:id", listingController.updateListing);
 router.patch("/:id/status", listingController.updateStatus);
+router.delete("/:id", listingController.deleteListing);
 module.exports = router;

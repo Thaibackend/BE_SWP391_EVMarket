@@ -58,3 +58,12 @@ exports.updateStatus = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.deleteListing = async (req, res) => {
+  try {
+    await listingService.deleteListing(req.params.id);
+    res.json({ success: true, message: "Listing deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

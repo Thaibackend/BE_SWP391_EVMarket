@@ -34,6 +34,10 @@ class ListingService {
   async updateStatus(id, status) {
     return await Listing.findByIdAndUpdate(id, { status }, { new: true });
   }
+
+  async deleteListing(id) {
+    return await Listing.findByIdAndDelete(id);
+  }
 }
 
 module.exports = new ListingService();
