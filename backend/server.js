@@ -8,6 +8,7 @@ const favoriteRoutes = require("./routes/favorites");
 const reviewRoutes = require("./routes/reviews");
 const notificationRoutes = require("./routes/notifications");
 const orderRoutes = require("./routes/orders");
+const listingRoutes = require("./routes/listings");
 const app = express();
 
 app.use(express.json());
@@ -35,6 +36,7 @@ app.use("/api/favorites", favoriteRoutes);
 app.use("/api/review", reviewRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/listings", listingRoutes);
 
 const startServer = async () => {
   await connectDB();
