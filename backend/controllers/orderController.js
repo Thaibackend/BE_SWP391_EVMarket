@@ -50,3 +50,13 @@ exports.updateContract = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.deleteOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    await orderService.deleteOrder(orderId);
+    res.json({ success: true, message: "Order deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

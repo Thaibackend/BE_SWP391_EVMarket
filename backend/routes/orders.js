@@ -7,4 +7,5 @@ router.get("/buyer/:userId", orderController.getOrdersByBuyer);
 router.get("/seller/:userId", orderController.getOrdersBySeller);
 router.patch("/:orderId/status", orderController.updateStatus);
 router.patch("/:orderId/contract", orderController.updateContract);
+router.delete("/:orderId", orderController.deleteOrder);
 module.exports = router;

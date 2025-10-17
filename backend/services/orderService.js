@@ -24,6 +24,9 @@ class OrderService {
       { new: true }
     );
   }
+  async deleteOrder(orderId) {
+    return await Order.findByIdAndDelete(orderId);
+  }
 }
 
 module.exports = new OrderService();
