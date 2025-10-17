@@ -13,3 +13,13 @@ exports.toggleFavorite = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.getFavorites = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const favorites = await favoriteService.getFavorites(userId);
+    res.json({ success: true, favorites });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

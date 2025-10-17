@@ -24,6 +24,10 @@ class FavoriteListingService {
       return { added: false, favorite };
     }
   }
+
+  async getFavorites(userId) {
+    return Favorite.findOne({ user: userId }).populate("listings");
+  }
 }
 
 module.exports = new FavoriteListingService();
