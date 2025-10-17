@@ -23,6 +23,14 @@ class NotificationService {
       { isRead: true }
     );
   }
+
+  async deleteNotification(notificationId) {
+    return await Notification.findByIdAndDelete(notificationId);
+  }
+
+  async clearNotifications(userId) {
+    return await Notification.deleteMany({ user: userId });
+  }
 }
 
 module.exports = new NotificationService();

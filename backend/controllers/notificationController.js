@@ -44,3 +44,23 @@ exports.markAllAsRead = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.deleteNotification = async (req, res) => {
+  try {
+    const { notificationId } = req.params;
+    await notificationService.deleteNotification(notificationId);
+    res.json({ success: true, message: "Notification deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.clearNotifications = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    await notificationService.clearNotifications(userId);
+    res.json({ success: true, message: "All notifications deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
