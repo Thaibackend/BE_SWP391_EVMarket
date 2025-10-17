@@ -3,5 +3,7 @@ const router = express.Router();
 const listingController = require("../controllers/listing.controller");
 
 router.post("/", listingController.createListing);
-
+router.get("/", listingController.getAllListings);
+router.get("/:id", listingController.getListingById);
+router.get("/seller/:sellerId", listingController.getListingsBySeller);
 module.exports = router;
