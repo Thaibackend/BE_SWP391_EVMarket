@@ -19,3 +19,13 @@ exports.createOrUpdateReview = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.getReviewsForUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const reviews = await reviewService.getReviewsForUser(userId);
+    res.json({ success: true, reviews });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

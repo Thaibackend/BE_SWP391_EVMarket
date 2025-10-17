@@ -14,6 +14,12 @@ class ReviewService {
     review = await Review.create({ reviewer, target, rating, comment });
     return { updated: false, review };
   }
+
+  async getReviewsForUser(targetUserId) {
+    return Review.find({ target: targetUserId })
+      .populate("reviewer", "name avatar") // tuỳ thuộc User có gì
+      .sort({ createdAt: -1 });
+  }
 }
 
 module.exports = new ReviewService();
