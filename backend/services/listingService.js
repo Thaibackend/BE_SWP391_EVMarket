@@ -26,6 +26,14 @@ class ListingService {
   async getListingsBySeller(sellerId) {
     return await Listing.find({ seller: sellerId }).populate("brand model");
   }
+
+  async updateListing(id, data) {
+    return await Listing.findByIdAndUpdate(id, data, { new: true });
+  }
+
+  async updateStatus(id, status) {
+    return await Listing.findByIdAndUpdate(id, { status }, { new: true });
+  }
 }
 
 module.exports = new ListingService();

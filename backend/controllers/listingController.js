@@ -37,3 +37,24 @@ exports.getListingsBySeller = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.updateListing = async (req, res) => {
+  try {
+    const listing = await listingService.updateListing(req.params.id, req.body);
+    res.json({ success: true, listing });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.updateStatus = async (req, res) => {
+  try {
+    const listing = await listingService.updateStatus(
+      req.params.id,
+      req.body.status
+    );
+    res.json({ success: true, listing });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

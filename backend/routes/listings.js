@@ -6,4 +6,6 @@ router.post("/", listingController.createListing);
 router.get("/", listingController.getAllListings);
 router.get("/:id", listingController.getListingById);
 router.get("/seller/:sellerId", listingController.getListingsBySeller);
+router.patch("/:id", listingController.updateListing);
+router.patch("/:id/status", listingController.updateStatus);
 module.exports = router;
