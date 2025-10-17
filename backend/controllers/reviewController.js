@@ -29,3 +29,13 @@ exports.getReviewsForUser = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.deleteReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    await reviewService.deleteReview(reviewId);
+    res.json({ success: true, message: "Review deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

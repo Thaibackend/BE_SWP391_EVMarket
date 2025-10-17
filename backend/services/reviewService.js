@@ -20,6 +20,10 @@ class ReviewService {
       .populate("reviewer", "name avatar") // tuỳ thuộc User có gì
       .sort({ createdAt: -1 });
   }
+
+  async deleteReview(reviewId) {
+    return Review.findByIdAndDelete(reviewId);
+  }
 }
 
 module.exports = new ReviewService();
