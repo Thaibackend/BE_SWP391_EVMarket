@@ -4,6 +4,7 @@ require("dotenv").config();
 const brandRoutes = require("./routes/brands");
 const carRoutes = require("./routes/cars");
 const pinRoutes = require("./routes/pins");
+const favoriteRoutes = require("./routes/favorites");
 const app = express();
 
 app.use(express.json());
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 app.use("/api/brands", brandRoutes);
 app.use("/api/cars", carRoutes);
 app.use("/api/pins", pinRoutes);
+app.use("/api/favorites", favoriteRoutes);
 
 const startServer = async () => {
   await connectDB();
