@@ -23,3 +23,13 @@ exports.getFavorites = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.clearFavorites = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const favorites = await favoriteService.clearFavorites(userId);
+    res.json({ success: true, message: "Favorites cleared", favorites });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

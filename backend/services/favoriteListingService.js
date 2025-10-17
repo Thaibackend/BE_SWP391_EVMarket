@@ -28,6 +28,14 @@ class FavoriteListingService {
   async getFavorites(userId) {
     return Favorite.findOne({ user: userId }).populate("listings");
   }
+
+  async clearFavorites(userId) {
+    return Favorite.findOneAndUpdate(
+      { user: userId },
+      { listings: [] },
+      { new: true }
+    );
+  }
 }
 
 module.exports = new FavoriteListingService();
