@@ -6,6 +6,7 @@ const carRoutes = require("./routes/cars");
 const pinRoutes = require("./routes/pins");
 const favoriteRoutes = require("./routes/favorites");
 const reviewRoutes = require("./routes/reviews");
+const notificationRoutes = require("./routes/notifications");
 const app = express();
 
 app.use(express.json());
@@ -31,6 +32,7 @@ app.use("/api/cars", carRoutes);
 app.use("/api/pins", pinRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/review", reviewRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 const startServer = async () => {
   await connectDB();
