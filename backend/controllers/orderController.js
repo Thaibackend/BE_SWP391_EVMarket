@@ -28,3 +28,25 @@ exports.getOrdersBySeller = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.updateStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    const order = await orderService.updateStatus(orderId, status);
+    res.json({ success: true, order });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.updateContract = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { contractUrl } = req.body;
+    const order = await orderService.updateContract(orderId, contractUrl);
+    res.json({ success: true, order });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

@@ -12,6 +12,18 @@ class OrderService {
   async getOrdersBySeller(sellerId) {
     return await Order.find({ seller: sellerId }).populate("buyer listing");
   }
+
+  async updateStatus(orderId, status) {
+    return await Order.findByIdAndUpdate(orderId, { status }, { new: true });
+  }
+
+  async updateContract(orderId, contractUrl) {
+    return await Order.findByIdAndUpdate(
+      orderId,
+      { contractUrl },
+      { new: true }
+    );
+  }
 }
 
 module.exports = new OrderService();
