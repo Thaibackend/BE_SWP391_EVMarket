@@ -9,6 +9,7 @@ const reviewRoutes = require("./routes/reviews");
 const notificationRoutes = require("./routes/notifications");
 const orderRoutes = require("./routes/orders");
 const listingRoutes = require("./routes/listings");
+const authRoutes = require("./routes/auth");
 const app = express();
 
 app.use(express.json());
@@ -37,6 +38,7 @@ app.use("/api/review", reviewRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/listings", listingRoutes);
+app.use("/api/auth", authRoutes);
 
 const startServer = async () => {
   await connectDB();
