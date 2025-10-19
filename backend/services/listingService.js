@@ -40,7 +40,8 @@ class ListingService {
   }
 
   async getListingsByType(type) {
-    const query = {};
+    const query = { status: "approved" };
+
     if (type) query.type = type;
 
     return await Listing.find(query)
