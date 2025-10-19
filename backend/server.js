@@ -10,10 +10,19 @@ const notificationRoutes = require("./routes/notifications");
 const orderRoutes = require("./routes/orders");
 const listingRoutes = require("./routes/listings");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
+const cors = require("cors");
+
 const app = express();
 
 app.use(express.json());
 
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
@@ -39,7 +48,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/auth", authRoutes);
-
+app.use("/api/users", userRoutes);
 const startServer = async () => {
   await connectDB();
   const PORT = process.env.PORT || 8080;

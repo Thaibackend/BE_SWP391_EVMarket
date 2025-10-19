@@ -5,13 +5,14 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET || "evmarketsecretkey12345";
 
 class AuthService {
-  async register({ name, email, phone, password }) {
+  async register({ name, email, phone, password, role }) {
     const existingUser = await User.findOne({ email });
     if (existingUser) throw new Error("Email already exists");
 
     const hashPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
+      role,
       name,
       email,
       phone,

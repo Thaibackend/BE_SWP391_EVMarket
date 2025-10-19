@@ -67,3 +67,14 @@ exports.deleteListing = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.getListingsByType = async (req, res) => {
+  try {
+    const { type } = req.query;
+    const listings = await ListingService.getListingsByType(type);
+    return res.json({ ok: true, data: listings });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ ok: false, message: "Server error" });
+  }
+};

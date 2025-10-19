@@ -5,7 +5,7 @@ class ListingService {
     return await Listing.create(data);
   }
   async getListingById(id) {
-    return await Listing.findById(id).populate("seller brand model");
+    return await Listing.findById(id).populate("seller brand");
   }
 
   async getAllListings(filters) {
@@ -20,11 +20,11 @@ class ListingService {
       if (filters.maxPrice) query.price.$lte = Number(filters.maxPrice);
     }
 
-    return await Listing.find(query).populate("seller brand model");
+    return await Listing.find(query).populate("seller brand");
   }
 
   async getListingsBySeller(sellerId) {
-    return await Listing.find({ seller: sellerId }).populate("brand model");
+    return await Listing.find({ seller: sellerId }).populate("brand");
   }
 
   async updateListing(id, data) {
@@ -37,6 +37,15 @@ class ListingService {
 
   async deleteListing(id) {
     return await Listing.findByIdAndDelete(id);
+  }
+
+  async getListingsByType(type) {
+    const query = {};
+    if (type) query.type = type;
+
+    return await Listing.find(query)
+      .populate("seller", "name email")
+      .populate("brand", "name");
   }
 }
 

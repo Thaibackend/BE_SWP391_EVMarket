@@ -5,7 +5,6 @@ const listingSchema = new mongoose.Schema(
     type: { type: String, enum: ["car", "battery"] },
     title: String,
     brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
-    model: { type: mongoose.Schema.Types.ObjectId, ref: "CarModel" },
     year: Number,
     batteryCapacity: Number,
     kmDriven: Number,
@@ -14,7 +13,7 @@ const listingSchema = new mongoose.Schema(
     images: [String],
     status: {
       type: String,
-      enum: ["active", "sold", "pending"],
+      enum: ["active", "sold", "approved", "pending", "rejected"],
       default: "pending",
     },
   },
