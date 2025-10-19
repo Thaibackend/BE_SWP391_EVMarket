@@ -78,3 +78,20 @@ exports.getListingsByType = async (req, res) => {
     return res.status(500).json({ ok: false, message: "Server error" });
   }
 };
+
+exports.compareListings = async (req, res) => {
+  try {
+    const { listing1, listing2 } = req.body;
+    if (!listing1 || !listing2) {
+      return res
+        .status(400)
+        .json({ ok: false, message: "listing1 and listing2 are required" });
+    }
+
+    const result = await ListingService.compareListings(listing1, listing2);
+    return res.json({ ok: true, data: result });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ ok: false, message: error.message });
+  }
+};

@@ -47,6 +47,27 @@ class ListingService {
       .populate("seller", "name email")
       .populate("brand", "name");
   }
+
+  async compareListings(id1, id2) {
+    const listing1 = await Listing.findById(id1);
+    const listing2 = await Listing.findById(id2);
+
+    if (!listing1 || !listing2) {
+      throw new Error("One or both listings not found");
+    }
+
+    return {
+      listing1,
+      listing2,
+      comparison: {
+        priceDifference: (listing1.price ?? 0) - (listing2.price ?? 0),
+        yearDifference: (listing1.year ?? 0) - (listing2.year ?? 0),
+        kmDifference: (listing1.kmDriven ?? 0) - (listing2.kmDriven ?? 0),
+        batteryDifference:
+          (listing1.batteryCapacity ?? 0) - (listing2.batteryCapacity ?? 0),
+      },
+    };
+  }
 }
 
 module.exports = new ListingService();
