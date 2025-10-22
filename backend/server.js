@@ -11,6 +11,7 @@ const orderRoutes = require("./routes/orders");
 const listingRoutes = require("./routes/listings");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
+const uploadRoutes = require("./routes/upload");
 const cors = require("cors");
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(
     credentials: true,
   })
 );
+
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
@@ -49,6 +51,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/upload", uploadRoutes);
 const startServer = async () => {
   await connectDB();
   const PORT = process.env.PORT || 8080;
