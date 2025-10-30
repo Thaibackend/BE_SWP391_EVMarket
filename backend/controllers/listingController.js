@@ -71,7 +71,7 @@ exports.deleteListing = async (req, res) => {
 exports.getListingsByType = async (req, res) => {
   try {
     const { type } = req.query;
-    const listings = await ListingService.getListingsByType(type);
+    const listings = await listingService.getListingsByType(type);
     return res.json({ ok: true, data: listings });
   } catch (error) {
     console.error(error);
@@ -88,7 +88,7 @@ exports.compareListings = async (req, res) => {
         .json({ ok: false, message: "listing1 and listing2 are required" });
     }
 
-    const result = await ListingService.compareListings(listing1, listing2);
+    const result = await listingService.compareListings(listing1, listing2);
     return res.json({ ok: true, data: result });
   } catch (error) {
     console.error(error);

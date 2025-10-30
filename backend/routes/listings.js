@@ -3,7 +3,7 @@ const router = express.Router();
 const listingController = require("../controllers/listingController");
 
 router.post("/", listingController.createListing);
-router.post("/listings/compare", listingController.compareListings);
+router.post("/compare", listingController.compareListings);
 router.get("/", listingController.getAllListings);
 router.get("/by-type", listingController.getListingsByType);
 router.get("/:id", listingController.getListingById);

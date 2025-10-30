@@ -5,9 +5,15 @@ const orderSchema = new mongoose.Schema(
     seller: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     listing: { type: mongoose.Schema.Types.ObjectId, ref: "Listing" },
     price: Number,
+    paymentMethod: {
+      type: String,
+      enum: ["bank", "cash", "deposit"],
+      default: "bank",
+    },
+    isPaid: { type: Boolean, default: false },
     status: {
       type: String,
-      enum: ["pending", "paid", "completed", "cancelled"],
+      enum: ["pending", "approved", "completed", "cancelled"],
       default: "pending",
     },
     contractUrl: String,

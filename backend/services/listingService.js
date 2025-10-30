@@ -9,10 +9,11 @@ class ListingService {
   }
 
   async getAllListings(filters) {
-    const query = {};
+    const query = {
+      status: { $in: ["active", "approved", "sold"] },
+    };
 
     if (filters.type) query.type = filters.type;
-    if (filters.status) query.status = filters.status;
     if (filters.brand) query.brand = filters.brand;
     if (filters.minPrice || filters.maxPrice) {
       query.price = {};

@@ -1,8 +1,26 @@
 const Order = require("../models/Order");
-
+const Listing = require("../models/Listing");
 class OrderService {
-  async createOrder(buyer, seller, listing, price) {
-    return await Order.create({ buyer, seller, listing, price });
+  async createOrder(buyer, seller, listingId, price) {
+    const listing = await Listing.findById(listingId);
+    if (!listing) throw new Error("Listing không tồn tại");
+
+    if (listing.status === "sold") {
+      throw new Error("Xe này đã được bán rồi");
+    }
+
+    const order = await Order.create({
+      buyer,
+      seller,
+      listing: listingId,
+      price,
+      status: "pending",
+    });
+
+    listing.status = "processing";
+    await listing.save();
+
+    return order;
   }
 
   async getOrdersByBuyer(buyerId) {
@@ -14,7 +32,25 @@ class OrderService {
   }
 
   async updateStatus(orderId, status) {
-    return await Order.findByIdAndUpdate(orderId, { status }, { new: true });
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
+
+    if (!order) {
+      throw new Error("Không tìm thấy đơn hàng");
+    }
+
+    if (status === "completed") {
+      await Listing.findByIdAndUpdate(order.listing, { status: "sold" });
+    }
+
+    if (status === "cancelled") {
+      await Listing.findByIdAndUpdate(order.listing, { status: "approved" });
+    }
+
+    return order;
   }
 
   async updateContract(orderId, contractUrl) {

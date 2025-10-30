@@ -13,7 +13,7 @@ const listingSchema = new mongoose.Schema(
     images: [String],
     status: {
       type: String,
-      enum: ["active", "sold", "approved", "pending", "rejected"],
+      enum: ["active", "sold", "approved", "pending", "processing", "rejected"],
       default: "pending",
     },
   },

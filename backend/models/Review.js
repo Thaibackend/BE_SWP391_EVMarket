@@ -3,6 +3,7 @@ const reviewSchema = new mongoose.Schema(
   {
     reviewer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     target: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    listing: { type: mongoose.Schema.Types.ObjectId, ref: "Listing" },
     rating: Number,
     comment: String,
   },

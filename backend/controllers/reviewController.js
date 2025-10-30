@@ -2,12 +2,13 @@ const reviewService = require("../services/reviewService");
 
 exports.createOrUpdateReview = async (req, res) => {
   try {
-    const { reviewer, target, rating, comment } = req.body;
+    const { reviewer, target, rating, comment, listing } = req.body;
     const result = await reviewService.createOrUpdateReview(
       reviewer,
       target,
       rating,
-      comment
+      comment,
+      listing
     );
 
     res.json({
@@ -37,5 +38,23 @@ exports.deleteReview = async (req, res) => {
     res.json({ success: true, message: "Review deleted" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.getReviewsByListing = async (req, res) => {
+  try {
+    const { listingId } = req.params;
+    if (!listingId) return res.status(400).json({ message: "Thiếu listingId" });
+
+    const reviews = await reviewService.getReviewsByListing(listingId);
+
+    res.json({
+      success: true,
+      count: reviews.length,
+      reviews,
+    });
+  } catch (err) {
+    console.error("Error getReviewsByListing:", err);
+    res.status(500).json({ message: "Lỗi server" });
   }
 };
