@@ -9,6 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@google/genai": "^1.28.0",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.41.3",

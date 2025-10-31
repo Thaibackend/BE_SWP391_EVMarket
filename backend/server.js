@@ -12,6 +12,9 @@ const listingRoutes = require("./routes/listings");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const uploadRoutes = require("./routes/upload");
+const dashboardRoutes = require("./routes/dashboard");
+const cartRoutes = require("./routes/cartRoute");
+const aiRoutes = require("./routes/ai");
 const cors = require("cors");
 
 const app = express();
@@ -52,6 +55,9 @@ app.use("/api/listings", listingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/ai", aiRoutes);
 const startServer = async () => {
   await connectDB();
   const PORT = process.env.PORT || 8080;
