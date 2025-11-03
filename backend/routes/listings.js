@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const listingController = require("../controllers/listingController");
+const authMiddleware = require("../middleware/auth");
 
-router.post("/", listingController.createListing);
+router.post("/", authMiddleware, listingController.createListing);
 router.post("/compare", listingController.compareListings);
 router.get("/", listingController.getAllListings);
 router.get("/approve", listingController.getListingApprove);

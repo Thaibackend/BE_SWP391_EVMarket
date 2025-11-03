@@ -1,8 +1,39 @@
 const Listing = require("../models/Listing");
-
+const UserPackage = require("../models/UserPackage");
+const Package = require("../models/Package");
 class ListingService {
-  async createListing(data) {
-    return await Listing.create(data);
+  async createListing(userId, listingData) {
+    console.log({ userId });
+    // 1. Lấy gói đang dùng
+    const userPackage = await UserPackage.findOne({
+      user: userId,
+      status: "active",
+    }).populate("package");
+
+    if (!userPackage) {
+      throw new Error("Bạn chưa mua gói dịch vụ, không thể đăng bài.");
+    }
+
+    const pkg = userPackage.package;
+
+    // 2. Kiểm tra maxListings
+    if (pkg.maxListings !== null) {
+      const currentCount = await Listing.countDocuments({ owner: userId });
+      if (currentCount >= pkg.maxListings) {
+        throw new Error(
+          `Bạn đã đạt số lượng bài đăng tối đa (${pkg.maxListings}) của gói ${pkg.name}.`
+        );
+      }
+    }
+
+    // 3. Tạo bài đăng
+    const listing = await Listing.create({
+      ...listingData,
+      owner: userId,
+      package: pkg._id,
+    });
+
+    return listing;
   }
   async getListingById(id) {
     return await Listing.findById(id).populate("seller brand");

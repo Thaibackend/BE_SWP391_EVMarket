@@ -16,6 +16,7 @@ const dashboardRoutes = require("./routes/dashboard");
 const cartRoutes = require("./routes/cartRoute");
 const aiRoutes = require("./routes/ai");
 const packageRoute = require("./routes/package");
+const payosRoutes = require("./routes/payosRoutes");
 const cors = require("cors");
 
 const app = express();
@@ -60,6 +61,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/packages", packageRoute);
+app.use("/payos", payosRoutes);
 const startServer = async () => {
   await connectDB();
   const PORT = process.env.PORT || 8080;
