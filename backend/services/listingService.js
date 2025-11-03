@@ -24,6 +24,22 @@ class ListingService {
     return await Listing.find(query).populate("seller brand");
   }
 
+  async getListingApprove(filters) {
+    const query = {
+      status: { $in: ["approved"] },
+    };
+
+    if (filters.type) query.type = filters.type;
+    if (filters.brand) query.brand = filters.brand;
+    if (filters.minPrice || filters.maxPrice) {
+      query.price = {};
+      if (filters.minPrice) query.price.$gte = Number(filters.minPrice);
+      if (filters.maxPrice) query.price.$lte = Number(filters.maxPrice);
+    }
+
+    return await Listing.find(query).populate("seller brand");
+  }
+
   async getListingsBySeller(sellerId) {
     return await Listing.find({ seller: sellerId }).populate("brand");
   }

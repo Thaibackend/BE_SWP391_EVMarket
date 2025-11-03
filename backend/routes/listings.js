@@ -5,6 +5,7 @@ const listingController = require("../controllers/listingController");
 router.post("/", listingController.createListing);
 router.post("/compare", listingController.compareListings);
 router.get("/", listingController.getAllListings);
+router.get("/approve", listingController.getListingApprove);
 router.get("/by-type", listingController.getListingsByType);
 router.get("/:id", listingController.getListingById);
 router.get("/seller/:sellerId", listingController.getListingsBySeller);
