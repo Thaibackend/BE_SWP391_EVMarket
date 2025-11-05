@@ -1,6 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const passport = require("passport");
+const session = require("express-session");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
+require("./config/passport")(passport);
 const brandRoutes = require("./routes/brands");
 const carRoutes = require("./routes/cars");
 const pinRoutes = require("./routes/pins");
@@ -17,6 +21,8 @@ const cartRoutes = require("./routes/cartRoute");
 const aiRoutes = require("./routes/ai");
 const packageRoute = require("./routes/package");
 const payosRoutes = require("./routes/payosRoutes");
+const vnpayRoutes = require("./routes/vnpayRoutes");
+const zalopayRoutes = require("./routes/zalopay");
 const cors = require("cors");
 
 const app = express();
@@ -29,6 +35,15 @@ app.use(
     credentials: true,
   })
 );
+app.use(
+  session({
+    secret: "secretkey123",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 const connectDB = async () => {
   try {
@@ -62,6 +77,48 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/packages", packageRoute);
 app.use("/payos", payosRoutes);
+app.use("/vnpay", vnpayRoutes);
+app.use("/zalopay", zalopayRoutes);
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "/login-failed",
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user;
+
+      const token = jwt.sign(
+        { id: user._id, email: user.email, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      const userData = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role,
+      };
+
+      const redirectUrl = `${
+        process.env.FRONTEND_URL
+      }?token=${token}&user=${encodeURIComponent(JSON.stringify(userData))}`;
+
+      res.redirect(redirectUrl);
+    } catch (err) {
+      console.error("OAuth callback error:", err);
+      res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
+    }
+  }
+);
 const startServer = async () => {
   await connectDB();
   const PORT = process.env.PORT || 8080;

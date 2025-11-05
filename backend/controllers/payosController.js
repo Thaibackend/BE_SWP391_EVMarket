@@ -8,7 +8,7 @@ async function createPayment(req, res) {
       return res.status(400).json({ error: "amount và orderId là bắt buộc" });
     }
 
-    const result = await payosService.createPaymentLink(amount, orderId);
+    const result = await payosService.createPayment(amount, orderId);
     res.json(result);
   } catch (err) {
     console.error(err);
