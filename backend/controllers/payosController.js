@@ -1,39 +1,34 @@
-const payosService = require("../services/payosService");
+// controllers/payosController.js
+require("dotenv").config();
+const { PayOS } = require("@payos/node");
 
-// Tạo payment
-async function createPayment(req, res) {
+const payos = new PayOS({
+  clientId: process.env.PAYOS_CLIENT_ID,
+  apiKey: process.env.PAYOS_API_KEY,
+  checksumKey: process.env.PAYOS_CHECKSUM_KEY,
+});
+
+exports.createPayment = async (req, res) => {
   try {
-    const { amount, orderId } = req.body;
-    if (!amount || !orderId) {
-      return res.status(400).json({ error: "amount và orderId là bắt buộc" });
-    }
+    const { amount, description } = req.body;
 
-    const result = await payosService.createPayment(amount, orderId);
-    res.json(result);
-  } catch (err) {
-    console.error(err);
+    const body = {
+      orderCode: Date.now(),
+      amount,
+      description,
+      returnUrl: process.env.PAYOS_RETURN_URL,
+      cancelUrl: process.env.PAYOS_CANCEL_URL,
+    };
+
+    const paymentLink = await payos.paymentRequests.create(body);
+    res.json({ checkoutUrl: paymentLink.checkoutUrl });
+  } catch (error) {
+    console.error("❌ Error creating payment:", error);
     res
       .status(500)
-      .json({ error: "Payment creation failed", message: err.message });
+      .json({
+        message: "Error creating payment",
+        error: error.message || error,
+      });
   }
-}
-
-// Kiểm tra trạng thái payment
-async function paymentStatus(req, res) {
-  try {
-    const { orderId } = req.params;
-    if (!orderId) {
-      return res.status(400).json({ error: "orderId là bắt buộc" });
-    }
-
-    const result = await payosService.getPaymentStatus(orderId);
-    res.json(result);
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .json({ error: "Check payment status failed", message: err.message });
-  }
-}
-
-module.exports = { createPayment, paymentStatus };
+};
