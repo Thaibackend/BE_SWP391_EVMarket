@@ -19,9 +19,17 @@ async function assignPackageToUser({
   transactionId = null,
   contract = null,
 }) {
+  // 1️⃣ Lấy package
   const pkg = await Package.findById(packageId);
   if (!pkg) throw new Error("Package not found");
 
+  // 2️⃣ Huỷ tất cả gói active cũ của user
+  await UserPackage.updateMany(
+    { user: userId, status: "active" },
+    { $set: { status: "cancelled", endDate: new Date() } }
+  );
+
+  // 3️⃣ Tạo gói mới
   const start = new Date();
   const end =
     pkg.durationDays && pkg.durationDays > 0
@@ -33,7 +41,7 @@ async function assignPackageToUser({
     package: packageId,
     transactionId,
     contract,
-    status: pkg.durationDays ? "active" : "active",
+    status: "active",
     startDate: start,
     endDate: end,
     paidPrice,
@@ -42,6 +50,7 @@ async function assignPackageToUser({
 
   const saved = await up.save();
 
+  // 4️⃣ Thêm gói vào user.packages
   await User.findByIdAndUpdate(userId, {
     $push: { packages: saved._id },
   }).catch(() => {});

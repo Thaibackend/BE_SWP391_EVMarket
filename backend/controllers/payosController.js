@@ -10,25 +10,30 @@ const payos = new PayOS({
 
 exports.createPayment = async (req, res) => {
   try {
-    const { amount, description } = req.body;
+    const { amount, description, userId, packageId } = req.body;
+
+    const orderCode = Date.now();
+
+    // Thêm userId và packageId vào returnUrl
+    const returnUrl = `${process.env.PAYOS_RETURN_URL}?status=PAID&userId=${userId}&packageId=${packageId}`;
+    const cancelUrl = `${process.env.PAYOS_CANCEL_URL}?status=CANCEL&userId=${userId}&packageId=${packageId}`;
 
     const body = {
-      orderCode: Date.now(),
+      orderCode,
       amount,
       description,
-      returnUrl: process.env.PAYOS_RETURN_URL,
-      cancelUrl: process.env.PAYOS_CANCEL_URL,
+      returnUrl,
+      cancelUrl,
     };
 
     const paymentLink = await payos.paymentRequests.create(body);
+
     res.json({ checkoutUrl: paymentLink.checkoutUrl });
   } catch (error) {
     console.error("❌ Error creating payment:", error);
-    res
-      .status(500)
-      .json({
-        message: "Error creating payment",
-        error: error.message || error,
-      });
+    res.status(500).json({
+      message: "Error creating payment",
+      error: error.message || error,
+    });
   }
 };
