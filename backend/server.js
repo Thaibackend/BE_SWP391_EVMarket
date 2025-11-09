@@ -23,6 +23,7 @@ const packageRoute = require("./routes/package");
 const payosRoutes = require("./routes/payosRoutes");
 const vnpayRoutes = require("./routes/vnpayRoutes");
 const zalopayRoutes = require("./routes/zalopay");
+const userPackageRoutes = require("./routes/userPackage");
 const cors = require("cors");
 
 const app = express();
@@ -76,6 +77,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/packages", packageRoute);
+app.use("/api/user-packages", userPackageRoutes);
 app.use("/payos", payosRoutes);
 app.use("/vnpay", vnpayRoutes);
 app.use("/zalopay", zalopayRoutes);

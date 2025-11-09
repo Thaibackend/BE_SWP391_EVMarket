@@ -1,9 +1,9 @@
 const Listing = require("../models/Listing");
 const UserPackage = require("../models/UserPackage");
+const User = require("../models/User");
 const Package = require("../models/Package");
 class ListingService {
   async createListing(userId, listingData) {
-    console.log({ userId });
     // 1. Lấy gói đang dùng
     const userPackage = await UserPackage.findOne({
       user: userId,
@@ -33,8 +33,12 @@ class ListingService {
       package: pkg._id,
     });
 
+    // 4. Cập nhật số lượng bài đăng user
+    await User.findByIdAndUpdate(userId, { $inc: { postCount: 1 } });
+
     return listing;
   }
+
   async getListingById(id) {
     return await Listing.findById(id).populate("seller brand");
   }

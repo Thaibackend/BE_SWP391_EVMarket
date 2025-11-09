@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
     phone: String,
     password: String,
     avatar: String,
+    postCount: { type: Number, default: 0 },
     vehicles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Listing" }],
     transactionHistory: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Order" },
