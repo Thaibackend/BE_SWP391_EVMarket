@@ -19,6 +19,7 @@ const listingSchema = new mongoose.Schema(
     brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
     model: { type: String },
     year: { type: Number },
+
     price: { type: Number, required: true },
     aiSuggestedPrice: { type: Number },
     images: [{ type: String }],
@@ -49,6 +50,12 @@ const listingSchema = new mongoose.Schema(
       color: { type: String },
       kmDriven: { type: Number },
       batteryCapacity: { type: Number },
+      batteryPercentage: {
+        type: Number,
+        min: 0,
+        max: 100,
+        default: 100,
+      },
       insuranceExpiry: { type: Date },
       inspectionExpiry: { type: Date },
       accidentHistory: { type: String },
