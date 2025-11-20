@@ -5,6 +5,7 @@ const packageController = require("../controllers/packageController");
 router.post("/", packageController.createPackage);
 
 router.get("/", packageController.listPackages);
+router.put("/:id", packageController.update);
 
 router.post("/assign", packageController.assignPackageToUser);
 

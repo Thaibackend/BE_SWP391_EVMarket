@@ -124,3 +124,13 @@ exports.getUsersByPackage = async (req, res) => {
     });
   }
 };
+
+exports.update = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await packageService.updatePackage(id, req.body);
+    res.json({ ok: true, data: updated });
+  } catch (err) {
+    res.status(400).json({ ok: false, error: err.message });
+  }
+};

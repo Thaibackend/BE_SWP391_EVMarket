@@ -10,6 +10,15 @@ async function createPackage(data) {
 async function listPackages(filter = {}) {
   return await Package.find(filter).lean();
 }
+async function updatePackage(packageId, data) {
+  const pkg = await Package.findById(packageId);
+  if (!pkg) throw new Error("Package not found");
+
+  Object.assign(pkg, data);
+  await pkg.save();
+
+  return pkg;
+}
 
 async function assignPackageToUser({
   userId,
@@ -78,6 +87,7 @@ async function getUsersByPackage(packageId) {
 }
 
 module.exports = {
+  updatePackage,
   createPackage,
   listPackages,
   assignPackageToUser,

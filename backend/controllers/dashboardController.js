@@ -3,7 +3,8 @@ const Listing = require("../models/Listing");
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Review = require("../models/Review");
-
+const UserPackage = require("../models/UserPackage");
+const Package = require("../models/Package");
 const getLastNDays = (n) => {
   const arr = [];
   for (let i = n - 1; i >= 0; i--) {
@@ -15,9 +16,9 @@ const getLastNDays = (n) => {
   }
   return arr;
 };
-
 exports.getSummary = async (req, res) => {
   try {
+    // Tổng số users, listings, orders, reviews
     const [totalUsers, totalListings, totalOrders, totalReviews] =
       await Promise.all([
         User.countDocuments(),
@@ -30,51 +31,41 @@ exports.getSummary = async (req, res) => {
     const listingStatusAgg = await Listing.aggregate([
       { $group: { _id: "$status", count: { $sum: 1 } } },
     ]);
-
     const listingStatus = listingStatusAgg.reduce((acc, cur) => {
       acc[cur._id] = cur.count;
       return acc;
     }, {});
 
-    // Orders: revenue per day (last 7 days) - only paid/completed
     const days = getLastNDays(7);
     const startDate = days[0];
-    const revenueAgg = await Order.aggregate([
-      {
-        $match: {
-          isPaid: true,
-          status: { $in: ["completed", "approved"] },
-          updatedAt: { $gte: startDate },
-        },
-      },
-      {
-        $group: {
-          _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$updatedAt" },
-          },
-          revenue: { $sum: "$price" },
-          orders: { $sum: 1 },
-        },
-      },
-      { $sort: { _id: 1 } },
-    ]);
 
-    // Normalize revenue into array of { date, revenue, orders }
-    const revenueMap = revenueAgg.reduce((acc, cur) => {
-      acc[cur._id] = { revenue: cur.revenue, orders: cur.orders };
-      return acc;
-    }, {});
+    const userPackages = await UserPackage.find({
+      status: "active",
+      updatedAt: { $gte: startDate },
+    })
+      .populate("package", "price")
+      .lean();
+
+    const revenueMap = {};
+    days.forEach((d) => {
+      const key = d.toISOString().slice(0, 10);
+      revenueMap[key] = { date: key, revenue: 0, orders: 0 };
+    });
+
+    userPackages.forEach((up) => {
+      const key = up.updatedAt.toISOString().slice(0, 10);
+      if (revenueMap[key]) {
+        revenueMap[key].revenue += up.package?.price ?? 0;
+        revenueMap[key].orders += 1;
+      }
+    });
 
     const revenueByDay = days.map((d) => {
       const key = d.toISOString().slice(0, 10);
-      return {
-        date: key,
-        revenue: revenueMap[key]?.revenue || 0,
-        orders: revenueMap[key]?.orders || 0,
-      };
+      return revenueMap[key];
     });
 
-    // Top sellers by number of listings + sales
+    // Top sellers
     const topSellers = await Listing.aggregate([
       { $group: { _id: "$seller", listings: { $sum: 1 } } },
       { $sort: { listings: -1 } },
@@ -99,7 +90,7 @@ exports.getSummary = async (req, res) => {
       },
     ]);
 
-    // recent orders
+    // Recent orders
     const recentOrders = await Order.find()
       .sort({ createdAt: -1 })
       .limit(8)

@@ -109,15 +109,35 @@ class ListingService {
       throw new Error("One or both listings not found");
     }
 
+    // Lấy dữ liệu an toàn
+    const price1 = listing1.price ?? 0;
+    const price2 = listing2.price ?? 0;
+
+    const year1 = listing1.year ?? 0;
+    const year2 = listing2.year ?? 0;
+
+    const km1 = listing1.carDetails?.kmDriven ?? 0;
+    const km2 = listing2.carDetails?.kmDriven ?? 0;
+
+    // Pin xe điện hoặc pin rời
+    const battery1 =
+      listing1.carDetails?.batteryCapacity ??
+      listing1.batteryDetails?.capacity ??
+      0;
+
+    const battery2 =
+      listing2.carDetails?.batteryCapacity ??
+      listing2.batteryDetails?.capacity ??
+      0;
+
     return {
       listing1,
       listing2,
       comparison: {
-        priceDifference: (listing1.price ?? 0) - (listing2.price ?? 0),
-        yearDifference: (listing1.year ?? 0) - (listing2.year ?? 0),
-        kmDifference: (listing1.kmDriven ?? 0) - (listing2.kmDriven ?? 0),
-        batteryDifference:
-          (listing1.batteryCapacity ?? 0) - (listing2.batteryCapacity ?? 0),
+        priceDifference: price1 - price2,
+        yearDifference: year1 - year2,
+        kmDifference: km1 - km2,
+        batteryDifference: battery1 - battery2,
       },
     };
   }
