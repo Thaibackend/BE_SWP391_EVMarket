@@ -1,4 +1,6 @@
 const express = require("express");
+const http = require("http");
+const { initSocket } = require("./config/socket");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
@@ -121,10 +123,16 @@ app.get(
     }
   }
 );
+
+const server = http.createServer(app);
+initSocket(server);
+
 const startServer = async () => {
   await connectDB();
   const PORT = process.env.PORT || 8080;
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  server.listen(PORT, () =>
+    console.log(`🚀 Server running on port ${PORT} + Socket.IO ready`)
+  );
 };
 
 startServer();

@@ -27,6 +27,14 @@ exports.getAllListings = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+exports.getAllListingsAllStatus = async (req, res) => {
+  try {
+    const listings = await listingService.getAllListingsAllStatus(req.query);
+    res.json({ success: true, listings });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 exports.getListingApprove = async (req, res) => {
   try {
     const listings = await listingService.getListingApprove(req.query);

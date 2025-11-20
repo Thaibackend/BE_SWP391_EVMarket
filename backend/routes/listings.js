@@ -6,6 +6,7 @@ const authMiddleware = require("../middleware/auth");
 router.post("/", authMiddleware, listingController.createListing);
 router.post("/compare", listingController.compareListings);
 router.get("/", listingController.getAllListings);
+router.get("/all", listingController.getAllListingsAllStatus);
 router.get("/approve", listingController.getListingApprove);
 router.get("/by-type", listingController.getListingsByType);
 router.get("/:id", listingController.getListingById);

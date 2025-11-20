@@ -2,6 +2,7 @@ const Listing = require("../models/Listing");
 const UserPackage = require("../models/UserPackage");
 const User = require("../models/User");
 const Package = require("../models/Package");
+const notificationService = require("./notificationService");
 class ListingService {
   async createListing(userId, listingData) {
     // 1. Lấy gói đang dùng
@@ -59,6 +60,20 @@ class ListingService {
     return await Listing.find(query).populate("seller brand");
   }
 
+  async getAllListingsAllStatus(filters) {
+    const query = {};
+
+    if (filters.type) query.type = filters.type;
+    if (filters.brand) query.brand = filters.brand;
+    if (filters.minPrice || filters.maxPrice) {
+      query.price = {};
+      if (filters.minPrice) query.price.$gte = Number(filters.minPrice);
+      if (filters.maxPrice) query.price.$lte = Number(filters.maxPrice);
+    }
+
+    return await Listing.find(query).populate("seller brand");
+  }
+
   async getListingApprove(filters) {
     const query = {
       status: { $in: ["approved"] },
@@ -84,7 +99,33 @@ class ListingService {
   }
 
   async updateStatus(id, status) {
-    return await Listing.findByIdAndUpdate(id, { status }, { new: true });
+    const listing = await Listing.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    ).populate("seller", "_id name email");
+
+    if (!listing) {
+      throw new Error("Listing not found");
+    }
+
+    if (status === "rejected") {
+      await notificationService.createNotification(
+        listing.seller._id,
+        "system",
+        "Listing bị từ chối",
+        `Listing "${listing.title}" của bạn đã bị từ chối.`
+      );
+    } else if (status === "approved") {
+      await notificationService.createNotification(
+        listing.seller._id,
+        "system",
+        "Listing được duyệt",
+        `Listing "${listing.title}" của bạn đã được duyệt và hiển thị.`
+      );
+    }
+
+    return listing;
   }
 
   async deleteListing(id) {

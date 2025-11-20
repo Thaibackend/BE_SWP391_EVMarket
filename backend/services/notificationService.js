@@ -1,8 +1,29 @@
 const Notification = require("../models/Notification");
-
+const { getIO } = require("../config/socket");
 class NotificationService {
   async createNotification(user, type, title, content) {
-    return await Notification.create({ user, type, title, content });
+    const notification = await Notification.create({
+      user,
+      type,
+      title,
+      content,
+    });
+
+    try {
+      const io = getIO();
+      io.to(user.toString()).emit("notification", {
+        _id: notification._id,
+        type: notification.type,
+        title: notification.title,
+        content: notification.content,
+        isRead: notification.isRead,
+        createdAt: notification.createdAt,
+      });
+    } catch (err) {
+      console.error("Emit notification error:", err);
+    }
+
+    return notification;
   }
 
   async getNotifications(userId) {
