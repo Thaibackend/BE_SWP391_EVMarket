@@ -10,7 +10,6 @@ const getLastNDays = (n) => {
   for (let i = n - 1; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
-    // normalize to 00:00
     d.setHours(0, 0, 0, 0);
     arr.push(d);
   }
@@ -18,7 +17,6 @@ const getLastNDays = (n) => {
 };
 exports.getSummary = async (req, res) => {
   try {
-    // Tổng số users, listings, orders, reviews
     const [totalUsers, totalListings, totalOrders, totalReviews] =
       await Promise.all([
         User.countDocuments(),
@@ -27,7 +25,6 @@ exports.getSummary = async (req, res) => {
         Review.countDocuments(),
       ]);
 
-    // Listing status counts
     const listingStatusAgg = await Listing.aggregate([
       { $group: { _id: "$status", count: { $sum: 1 } } },
     ]);
