@@ -99,24 +99,32 @@ class ListingService {
   }
 
   async updateStatus(id, status) {
-    const listing = await Listing.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    ).populate("seller", "_id name email");
+    const listing = await Listing.findById(id).populate(
+      "seller",
+      "_id name email postCount"
+    );
 
     if (!listing) {
       throw new Error("Listing not found");
     }
 
+    listing.status = status;
+    await listing.save();
+
     if (status === "rejected") {
+      await User.findByIdAndUpdate(listing.seller._id, {
+        $inc: { postCount: -1 },
+      });
+
       await notificationService.createNotification(
         listing.seller._id,
         "system",
         "Listing bị từ chối",
-        `Listing "${listing.title}" của bạn đã bị từ chối.`
+        `Listing "${listing.title}" của bạn đã bị từ chối. Bạn được hoàn lại 1 lượt đăng bài.`
       );
-    } else if (status === "approved") {
+    }
+
+    if (status === "approved") {
       await notificationService.createNotification(
         listing.seller._id,
         "system",
